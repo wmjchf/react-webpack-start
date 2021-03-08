@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
+
 module.exports = {
   entry: ["./src/index.tsx"],
   output: {
@@ -14,7 +15,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts(x?)$/,
-        exclude: /node_modules/, //不解析node_modules
+        exclude: /node_modules/, // 不解析node_modules
         loader: "babel-loader"
       }
     ]

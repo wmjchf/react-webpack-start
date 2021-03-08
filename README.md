@@ -1,6 +1,10 @@
 # 瞎折腾爬坑(webpack+react+typescript)
 
-- error: Cannot find module 'webpack-cli/bin/config-yargs', webpack-cli 和 webpack-dev-server 不兼容。
+### webpack 配置
+
+#### webpack-cli 和 webpack-dev-server 不兼容。
+
+error: Cannot find module 'webpack-cli/bin/config-yargs',
 
 ![image](https://user-images.githubusercontent.com/36124772/110301011-90250f00-8032-11eb-907f-13ff23d7cb4d.png)
 
@@ -14,14 +18,46 @@
       npm install webpack-cli@3.3.12 -D
 ```
 
-- husky 最新版本（5.1.3）不响应 hooks
+#### eslint-webpack-plugin 搭配 eslint 检查
 
 ```
-摸索半天之后，我把版本降到了4.3.6，结果就可以了。
-也有可能是最新版本的某些配置我没有配置，导致不响应hooks。（希望有大神能够指点指点）
+plugins: [
+    new ESLintPlugin({
+      extensions: [".tsx", ".ts", ".js"]
+    })
+]
 ```
 
-- eslint 配置
+一开始我没有配置`extensions`，导致 webpack 打包时检查不到，这里要注意。
+
+### prettier 配置
+
+格式化代码风格，这一点非常重要，可参考[这边文章](https://zhuanlan.zhihu.com/p/81764012?from_voters_page=true)
+
+创建`.prettierrc`文件，我的配置如下：
+
+```
+{
+  "singleQuote": false,
+  "semi": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "none",
+  "printWidth": 120,
+  "jsxBracketSameLine": false,
+  "overrides": [
+    {
+      "files": ".prettierrc",
+      "options": { "parser": "json" }
+    }
+  ]
+}
+
+```
+
+### eslint 配置
+
+可参考[这篇文章](https://juejin.cn/post/6844903901292920846)
 
 #### 扩展（extends）
 
@@ -110,7 +146,7 @@ rules: {
   },
 ```
 
-#### 更加运行环境决定是否要某种规则
+#### 运行环境决定是否禁止某种规则
 
 ```
 rules: {
@@ -119,7 +155,93 @@ rules: {
 },
 ```
 
-- 为什么使用@babel/eslint-parser
-  ESLint 的默认解析器和核心规则只支持最新的最终 ECMAScript 标准，不支持 Babel 提供的实验性（如新特性）和 non-standard（如流或 TypeScript 类型）语法。@babel/eslint-parser 是一个解析器，它允许 ESLint 在 Babel 转换的源代码上运行。ESLint 允许使用自定义解析器。使用此插件时，代码将由 Babel 的解析器（使用 Babel 配置文件中指定的配置）解析，并将生成的 AST 转换为 ESLint 可以理解的 ESTree 兼容结构。所有的位置信息，如行号，列也会被保留，这样您就可以轻松地跟踪错误。
+#### 为什么使用@babel/eslint-parser
+
+ESLint 的默认解析器和核心规则只支持最新的最终 ECMAScript 标准，不支持 Babel 提供的实验性（如新特性）和 non-standard（如流或 TypeScript 类型）语法。@babel/eslint-parser 是一个解析器，它允许 ESLint 在 Babel 转换的源代码上运行。ESLint 允许使用自定义解析器。使用此插件时，代码将由 Babel 的解析器（使用 Babel 配置文件中指定的配置）解析，并将生成的 AST 转换为 ESLint 可以理解的 ESTree 兼容结构。所有的位置信息，如行号，列也会被保留，这样您就可以轻松地跟踪错误。
 
 具体的可看[npm 的描述](https://www.npmjs.com/package/@babel/eslint-parser)
+
+#### husky 和 lint-staged
+
+`husky` 是一个为 git 客户端增加 hook 的工具。安装后，它会自动在仓库中的 .git/ 目录下增加相应的钩子；比如 pre-commit 钩子就会在你执行 `git commit` 的触发。
+`lint-staged` 他的作用是让检查的代码只是本次修改更新的代码，而不是全部的代码
+
+为了保证我们提交到 gitlab 的代码是符合公司代码规范要求的，在`git commit`之前会先`eslint`最新的代码，如果 eslint 报错的话，`git commit`会失败。
+
+1、安装 husky 和 lint-staged
+
+```
+npm install husky lint-staged -D
+
+但是这样会有一个问题，husky 最新版本（5.1.3）不响应 hooks
+
+摸索半天之后，我把版本降到了4.3.6，结果就可以了。
+也有可能是最新版本的某些配置我没有配置，导致不响应hooks。（希望有大神能够指点指点）
+```
+
+2、在 git commit 的时候还要保证 message 符合规范
+
+```
+npm install @commitlint/config-conventional @commitlint/cli -D
+```
+
+3、创建`.commitlintrc.js`文件，commit message 规则
+
+```
+const types = [
+  "build", // 修改项目的的构建系统（xcodebuild、webpack、glup等）的提交
+  "ci", // 修改项目的持续集成流程（Kenkins、Travis等）的提交
+  "chore", // 构建过程或辅助工具的变化
+  "docs", // 文档提交（documents）
+  "feat", // 新增功能（feature）
+  "fix", // 修复 bug
+  "pref", // 性能、体验相关的提交
+  "refactor", // 代码重构
+  "revert", // 回滚某个更早的提交
+  "style", // 不影响程序逻辑的代码修改、主要是样式方面的优化、修改
+  "test", // 测试相关的开发
+];
+
+// 规则参考格式为 feat: 功能说明
+const typeEnum = {
+  rules: {
+    "type-enum": [2, "always", types],
+  },
+  value: () => types,
+};
+
+module.exports = {
+  extends: ["@commitlint/config-conventional"],
+  rules: {
+    "type-case": [0],
+    "type-empty": [0],
+    "scope-empty": [0],
+    "scope-case": [0],
+    "subject-full-stop": [0, "never"],
+    "subject-case": [0, "never"],
+    "header-max-length": [0, "always", 72],
+    "type-enum": typeEnum.rules["type-enum"],
+  },
+};
+
+```
+
+4、package.json 配置
+
+```
+"husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS" // 对commit的信息进行规范,比如：git commit -m "feat: 改bug"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  }
+```
+
+整个过程我们对代码经过了两次检查，第一次是 webpack 打包的时候，如果 eslint 报错，则会打包失败；第二次是 git commit 的时候，如果 eslint 报错，也会提交失。而且在我们编码的过程中，也可以借助编辑器的插件对代码进行最开始的检查和格式化。整体下来就有三次的代码审查和格式化，这样就保证了代码的规范性和高可维护性。
