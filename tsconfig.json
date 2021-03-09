@@ -1,14 +1,24 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react",
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "outDir": "./build/",
-    "preserveConstEnums": true,
-    "removeComments": true,
-    "sourceMap": true,
-    "target": "es5"
+    "baseUrl": "./",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./lib", // 打包输出位置
+    "module": "esnext", // 设置生成代码的模块标准，可以设置为 CommonJS、AMD 和 UMD 等等。
+    "target": "es5", // 目标语言的版本
+    "declaration": true, // 生成声明文件，记得 inde.d.ts
+    "jsx": "react", // 等效 React.createElement调用
+    "moduleResolution": "Node", // 模块解析策略，这里提供两种解析策略 node 和 classic，ts 默认使用 node 解析策略。
+    "allowSyntheticDefaultImports": true, // 允许对不包含默认导出的模块使用默认导入。这个选项不会影响生成的代码，只会影响类型检查。
+    "skipLibCheck": true // 跳过类库检查
   },
-  "include": ["./src/**/*"]
+  "target": "es5",
+  "lib": ["dom", "dom.iterable", "esnext"],
+  "include": ["components"],
+  "exclude": ["node_modules", "lib", "esm"]
 }

@@ -1,0 +1,5 @@
+import Test from "./Test";
+
+export default Test;
+
+export * from "./interface";
