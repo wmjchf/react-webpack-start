@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 
 module.exports = {
-  entry: ["./src/index.tsx"],
+  entry: ["./example/index.tsx"],
   output: {
     // 输出目录
     path: path.join(__dirname, "dist"),
@@ -23,6 +23,10 @@ module.exports = {
         test: /\.ts(x?)$/,
         exclude: /node_modules/, // 不解析node_modules
         loader: "babel-loader"
+      },
+      {
+        test: /\.less$/,
+        use: ["style-loader", "css-loader", "less-loader"]
       }
     ]
   },

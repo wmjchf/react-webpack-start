@@ -1,4 +1,4 @@
-# 瞎折腾爬坑(webpack+react+typescript)
+# 瞎折腾爬坑(webpack+gulp+react+typescript)
 
 **目的：从无到有搭建自己的 react 组件库,同时熟悉前端工程化**
 
@@ -40,6 +40,17 @@ plugins: [
 
 一开始我没有配置`extensions`，导致 webpack 打包时检查不到，这里要注意。
 
+#### webpack 的 resolve 属性配置
+
+```
+resolve: {
+    alias: {
+      "bufang-ui": path.resolve(__dirname, "../components")
+    }, // 路径别名
+    extensions: [".ts", ".tsx", ".js"] // 可省略文件名后缀
+  },
+```
+
 ### prettier 配置
 
 格式化代码风格，这一点非常重要，可参考[这边文章](https://zhuanlan.zhihu.com/p/81764012?from_voters_page=true)
@@ -77,14 +88,14 @@ plugins: [
 {
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
-    "eslint-config-standard",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended"
   ]
 }
 ```
 
 1、`eslint`: 开头的是 ESLint 官方的扩展，一共有两个：`eslint:recommended` 、`eslint:all`。
-2、`plugin`: 开头的是扩展是插件类型，也可以直接在 `plugins` 属性中进行设置。
+2、`plugin`: 开头的是扩展是插件类型，也可以直接在 `plugins` 属性中进行设置（这种方式好像不起作用，建议还是在这个地方引入规则）。
 3、最后一种扩展来自 npm 包，官方规定 npm 包的扩展必须以 `eslint-config-` 开头，使用时可以省略这个头，上面案例中 `eslint-config-standard` 可以直接简写成 `standard`
 如果你觉得自己的配置十分满意，也可以将自己的 lint 配置发布到 npm 包。
 
@@ -147,12 +158,6 @@ module.exports = {
 // 可以根据团队或者项目自己去扩展
 rules: {
     "no-console": 1, // 不禁用console
-    "react/jsx-uses-react": 2, // 防止反应被错误地标记为未使用
-    "@typescript-eslint/no-var-requires": 0,
-    quotes: [2, "double"],
-    "linebreak-style": 0,
-    "react/jsx-filename-extension": ["error", { extensions: [".tsx"] }],
-    semi: ["error", "always"]
   },
 ```
 
