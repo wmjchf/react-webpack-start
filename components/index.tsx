@@ -1,2 +1,2 @@
-export type { TestInterface } from "./test/test";
-export { Test } from "./test/test";
+export type { TestInterface } from "./test";
+export { Test } from "./test";
