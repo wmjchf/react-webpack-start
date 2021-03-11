@@ -45,11 +45,8 @@ function compileScripts(babelEnv, destDir) {
 }
 
 function compileCJS() {
-  const { dest, scripts } = paths;
-  return gulp
-    .src(scripts)
-    .pipe(babel()) // 使用gulp-babel处理
-    .pipe(gulp.dest(dest.lib));
+  const { dest } = paths;
+  return compileScripts("lib", dest.lib);
 }
 
 /**
