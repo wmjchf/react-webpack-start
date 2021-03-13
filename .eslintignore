@@ -21,6 +21,7 @@ site/theme/template/NotFound.jsx
 typings
 esm/**/*
 lib/**/*
+docs
 node_modules
 _site
 dist
