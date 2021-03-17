@@ -9,11 +9,13 @@ module.exports = {
     // 输出目录
     path: path.join(__dirname, "dist"),
     // 文件名称
-    filename: "bundle.js"
+    filename: "bundle.js",
+    publicPath: "/"
   },
   resolve: {
     alias: {
-      "bufang-ui": path.resolve(__dirname, "../components")
+      "bufang-ui": path.resolve(__dirname, "../components"),
+      "@": path.resolve(__dirname, "../example")
     },
     extensions: [".ts", ".tsx", ".js"]
   },
