@@ -1,2 +1,5 @@
-export type { TestInterface } from "./test";
-export { default as Test } from "./test";
+// Form组件
+export type { FormValues } from "./form";
+export { default as Form } from "./form";
+// InputItem组件
+export { default as InputItem } from "./inputItem";

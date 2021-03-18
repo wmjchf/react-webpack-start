@@ -1,32 +1,27 @@
 import React from "react";
-import { useFormik } from "formik";
 import { PageHeader } from "@/components/PageHeader";
+import { InputItem } from "./components/InputItem";
+import { Form, FormValues } from "./components/Form";
 import "./index.less";
+
 const Test: React.FC = () => {
-  const formik = useFormik({
-    initialValues: {
-      name: "wang",
-      age: 12
-    },
-    onSubmit(value) {
-      console.log(value);
-    }
-  });
+  const initialValues = {
+    name: "wang",
+    age: "12"
+  };
+  const onSubmit = (value: FormValues) => {
+    console.log(value);
+  };
   return (
     <div className="formikComponent">
       <PageHeader title="Formik组件" />
-      <form>
-        <div className="bufang-inputItem" style={{ display: "flex" }}>
-          <div className="bufang-inputItem-label">姓名：</div>
-          <div className="bufang-inputItem-input">
-            <input type="text" name="name" id="name" />
-          </div>
+      <Form initialValues={initialValues} onSubmit={onSubmit}>
+        <InputItem label="姓名" name="name" id="name" />
+        <InputItem label="年龄" name="age" id="age" />
+        <div className="submitBtn">
+          <button type="submit">Submit</button>
         </div>
-        <div className="inputItem">
-          <label htmlFor="age">年龄：</label>
-          <input type="text" name="age" id="age" />
-        </div>
-      </form>
+      </Form>
     </div>
   );
 };
